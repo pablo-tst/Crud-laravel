@@ -8,6 +8,13 @@
 <body>
     <h1>Estoque</h1>
     
+    <div style="background: #f4f4f4; padding: 15px; margin-bottom: 20px; border: 1px solid #ddd;">
+        <strong>Resumo do Estoque:</strong><br>
+        Itens Cadastrados: {{ $products->count() }} <br>
+        Peças em Estoque: {{ $totalQuantity }} <br>
+        Valor Total Patrimonial: R$ {{ number_format($totalValue, 2, ',', '.') }}
+    </div>
+    
     <a href="{{ route('products.create') }}">Novo Produto</a>
 
     <table border="1" width="100%">
