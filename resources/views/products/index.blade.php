@@ -1,49 +1,88 @@
 <!DOCTYPE html>
-<html lang="pt-br">
+<html lang="pt-br" data-bs-theme="dark">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Lista de Produtos</title>
+    <title>Controle de Estoque</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
 </head>
 <body>
-    <h1>Estoque</h1>
     
-    <div style="background: #f4f4f4; padding: 15px; margin-bottom: 20px; border: 1px solid #ddd;">
-        <strong>Resumo do Estoque:</strong><br>
-        Itens Cadastrados: {{ $products->count() }} <br>
-        Peças em Estoque: {{ $totalQuantity }} <br>
-        Valor Total Patrimonial: R$ {{ number_format($totalValue, 2, ',', '.') }}
-    </div>
-    
-    <a href="{{ route('products.create') }}">Novo Produto</a>
+    <div class="container mt-5">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h1 class="display-6">Controle de Estoque</h1>
+            <a href="{{ route('products.create') }}" class="btn btn-success btn-lg">
+                <i class="bi bi-plus-circle"></i> Novo Produto
+            </a>
+        </div>
 
-    <table border="1" width="100%">
-        <thead>
-            <tr>
-                <th>Nome</th>
-                <th>Qtd</th>
-                <th>Preço</th>
-                <th>Ações</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach($products as $product)
-            <tr>
-                <td>{{ $product->name }}</td>
-                <td>{{ $product->quantity }}</td>
-                <td>R$ {{ number_format($product->price, 2, ',', '.') }}</td>
-                <td>
-                    <a href="{{ route('products.edit', $product->id) }}">Editar</a>
-                    
-                    <form action="{{ route('products.destroy', $product->id) }}" method="POST" style="display:inline;">
-                        @csrf 
-                        @method('DELETE') 
-                        <button type="submit">Excluir</button>
-                    </form>
-                </td>
-            </tr>
-            @endforeach
-        </tbody>
-    </table>
+        <div class="card text-bg-secondary mb-4">
+            <div class="card-body">
+                <h5 class="card-title"><i class="bi bi-speedometer2"></i> Resumo Geral</h5>
+                <div class="row text-center">
+                    <div class="col-md-4">
+                        <h3>{{ $products->count() }}</h3>
+                        <small>Itens Cadastrados</small>
+                    </div>
+                    <div class="col-md-4">
+                        <h3>{{ $totalQuantity ?? 0 }}</h3>
+                        <small>Peças em Estoque</small>
+                    </div>
+                    <div class="col-md-4">
+                        <h3>R$ {{ number_format($totalValue ?? 0, 2, ',', '.') }}</h3>
+                        <small>Valor Patrimonial</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card shadow-sm">
+            <div class="card-body p-0">
+                <table class="table table-hover table-striped mb-0">
+                    <thead class="table-dark">
+                        <tr>
+                            <th>Nome do Produto</th>
+                            <th class="text-center">Quantidade</th>
+                            <th class="text-end">Preço Unitário</th>
+                            <th class="text-center">Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach($products as $product)
+                        <tr class="align-middle">
+                            <td>{{ $product->name }}</td>
+                            <td class="text-center">
+                                <span class="badge bg-primary rounded-pill">{{ $product->quantity }}</span>
+                            </td>
+                            <td class="text-end">R$ {{ number_format($product->price, 2, ',', '.') }}</td>
+                            <td class="text-center">
+                                <a href="{{ route('products.edit', $product->id) }}" class="btn btn-sm btn-outline-warning">
+                                    <i class="bi bi-pencil"></i> Editar
+                                </a>
+                                
+                                <form action="{{ route('products.destroy', $product->id) }}" method="POST" style="display:inline;" onsubmit="return confirm('Tem certeza que deseja excluir este item?');">
+                                    @csrf 
+                                    @method('DELETE') 
+                                    <button type="submit" class="btn btn-sm btn-outline-danger">
+                                        <i class="bi bi-trash"></i> Excluir
+                                    </button>
+                                </form>
+                            </td>
+                        </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        
+        @if($products->isEmpty())
+            <div class="alert alert-info mt-3 text-center">
+                Nenhum produto cadastrado. Clique em "Novo Produto" para começar.
+            </div>
+        @endif
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
