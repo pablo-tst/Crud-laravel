@@ -8,6 +8,16 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
 </head>
 <body>
+
+    <nav class="navbar navbar-expand-lg bg-body-tertiary mb-4 border-bottom">
+        <div class="container">
+            <span class="navbar-brand mb-0 h1">Sistema Admin</span>
+            <form action="{{ route('logout') }}" method="POST">
+                @csrf
+                <button type="submit" class="btn btn-outline-danger btn-sm">Sair / Logout</button>
+            </form>
+        </div>
+    </nav>
     
     <div class="container mt-5">
         <div class="d-flex justify-content-between align-items-center mb-4">
@@ -36,6 +46,16 @@
                 </div>
             </div>
         </div>
+
+        <form action="{{ route('products.index') }}" method="GET" class="mb-4">
+            <div class="input-group">
+                <input type="text" name="search" class="form-control" placeholder="Pesquisar produto por nome..." value="{{ request('search') }}">
+                <button class="btn btn-primary" type="submit"><i class="bi bi-search"></i> Pesquisar</button>
+                @if(request('search'))
+                    <a href="{{ route('products.index') }}" class="btn btn-secondary">Limpar</a>
+                @endif
+            </div>
+        </form>
 
         <div class="card shadow-sm">
             <div class="card-body p-0">

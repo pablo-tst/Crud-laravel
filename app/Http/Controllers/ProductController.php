@@ -7,10 +7,18 @@ use Illuminate\Http\Request;
 
 class ProductController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $products = Product::all();
-        
+        // Lógica de Pesquisa
+        $query = Product::query();
+
+        if ($request->has('search') && $request->search != '') {
+            $query->where('name', 'like', '%' . $request->search . '%');
+        }
+
+        $products = $query->get();
+
+        // Totais (Atualizados conforme a pesquisa)
         $totalQuantity = $products->sum('quantity');
         $totalValue = $products->sum(function($product) {
             return $product->quantity * $product->price;
